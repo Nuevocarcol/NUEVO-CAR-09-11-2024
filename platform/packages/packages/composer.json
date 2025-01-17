@@ -1,0 +1,19 @@
+{
+    "name": "botble/packagemanage",
+    "description": "Packagemanage package",
+    "type": "package",
+    "autoload": {
+        "psr-4": {
+            "Botble\\Packagemanage\\": "src"
+        }
+    },
+    "require": {
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Botble\\Packagemanage\\Providers\\PackagemanageServiceProvider"
+            ]
+        }
+    }
+}

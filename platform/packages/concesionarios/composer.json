@@ -1,0 +1,19 @@
+{
+    "name": "botble/concesionarios",
+    "description": "Concesionarios package",
+    "type": "package",
+    "autoload": {
+        "psr-4": {
+            "Botble\\Concesionarios\\": "src"
+        }
+    },
+    "require": {
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+
+            ]
+        }
+    }
+}
