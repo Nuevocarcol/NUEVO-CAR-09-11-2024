@@ -2,6 +2,7 @@
 
 namespace Botble\Ecommerce\Forms;
 
+use App\Models\User;
 use Botble\Base\Facades\Assets;
 use Botble\Base\Facades\Html;
 use Botble\Base\Forms\FieldOptions\ContentFieldOption;
@@ -48,8 +49,16 @@ class ProductForm extends FormAbstract
         $brands = Brand::query()->pluck('name', 'id')->all();
 
         $productCollections = ProductCollection::query()->pluck('name', 'id')->all();
-
-        $productLabels = ProductLabel::query()->pluck('name', 'id')->all();
+        $usuario = User::query()->find(auth()->id());
+        if($usuario->email != 'admin@nuevocar.com'){
+            if(EcommerceHelper::validaConcesionario(auth()->id()) !== null){
+                $productLabels = ProductLabel::query()->where('id', '!=', '5')->pluck('name', 'id')->all();
+            } else{
+                $productLabels = ProductLabel::query()->where('id', '!=', '1')->pluck('name', 'id')->all();
+            }
+        } else {
+            $productLabels = ProductLabel::query()->pluck('name', 'id')->all();
+        }        
 
         $productId = null;
         $selectedCategories = [];

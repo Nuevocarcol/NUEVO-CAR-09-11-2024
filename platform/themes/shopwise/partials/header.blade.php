@@ -1,11 +1,38 @@
 <!DOCTYPE html>
 <html {!! Theme::htmlAttributes() !!}>
     <head>
+        <meta name="google-site-verification" content="Hzvq0fOH8yOrSQOs9JZ2YJN5VQGjA8f9GQezf8RsUiA" />
+        <meta name="google-site-verification" content="E6_3JXcjeK-Lf0mx_Ym3UsHTDQcdzbDONffDthrZxtc" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9REMCBQM68"></script> 
+        <script>
+            window.onload = function() {
+                var preloader = document.getElementById('preloader2');
+                setTimeout(function() {
+                    preloader.style.display = 'none';
+                }, 3000); // Oculta el preloader después de 2 segundos
+                };
+        </script>
+        {!! Theme::header() !!}
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-P3KJ5HGB');
+        window.dataLayer = window.dataLayer || []; 
+        function gtag(){
+        dataLayer.push(arguments);
+        } 
+        gtag('js', new Date()); 
+        gtag('config', 'G-9REMCBQM68'); 
+        </script>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=1" name="viewport"/>
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="google-site-verification" content="E6_3JXcjeK-Lf0mx_Ym3UsHTDQcdzbDONffDthrZxtc" />
+        
+        <meta name="description" content="Compra y venta de vehículos en Colombia, carros usados, autos nuevos, SUV económicos, vehículos de segunda mano.">
+        <meta name="keywords" content="compra de vehículos, venta de autos usados, carros nuevos, SUV económicos, vehículos de segunda mano">
+        <title>Compra y Venta de Vehículos en Colombia - Nuevocar</title>
 
         {!! Theme::typography()->renderCssVariables() !!}
 
@@ -16,7 +43,7 @@
                 --color-2nd: {{ theme_option('secondary_color', '#1D2224') }};
                 --secondary-color: {{ theme_option('secondary_color', '#1D2224') }};
             }
-            #preloader2 {
+            #preloader {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -31,17 +58,31 @@
                 font-size: 2rem;
                 font-weight: bold;
                     }
-                .loader-item {
+                #preloader2 {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+                background-color: #ededed; /* Fondo del preloader */
+                display: inline-grid;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-size: 2rem;
+                font-weight: bold;
+                    }
+            .loader-item {
                 margin: 0 20px; /* Espaciado entre elementos */
                 font-size: 24px;
                 font-weight: bold;
                 color: #333; /* Color del texto */
                 }
-                @keyframes spin {
+            @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
                 }
-
                 /*******************\
                 Loading Roller
                 \*******************/
@@ -145,7 +186,7 @@
                 .lds-roller div:nth-child(8):after {
                 top: 45px;
                 left: 10px;
-                } 
+                }  
                 .copy-text {
                     position: relative;
                     padding: 5px;
@@ -170,7 +211,6 @@
                     border-radius: 10px;
                     cursor: pointer;
                 }
-
                 .copy-text button:active {
                     background: #809ce2;
                 }
@@ -199,31 +239,58 @@
                 .copy-text.active button::before,
                 .copy-text.active button::after {
                     display: block;
-                } 
+                }
+            .banner_section.shop_banner_slider .carousel-item {
+                background-size: 1920px 500px!important;
+                background-repeat: no-repeat!important;
+                background-color:rgb(0, 0, 0)!important;
+            }
+            .banner_section.slide_wrap, .banner_section.slide_wrap .carousel-item {
+                height: 30rem!important;
+            }
+            @media only screen and (max-width: 1199px) {
+                .banner_section:not(.full_screen), .banner_section:not(.full_screen) .carousel-item {
+                    height: 20rem!important;
+                }
+                .banner_section.shop_banner_slider .carousel-item {
+                background-size: 1199px 20rem!important;
+                }
+            }
+            @media only screen and (max-width: 991px) {
+                .banner_section:not(.full_screen), .banner_section:not(.full_screen) .carousel-item {
+                    height: 18rem!important;
+                }
+                .banner_section.shop_banner_slider .carousel-item {
+                background-size: 991px 18rem!important;
+                }
+            }
+            @media only screen and (max-width: 575px) {
+            .banner_section:not(.full_screen), .banner_section:not(.full_screen) .carousel-item {
+                height: 16rem!important;
+                }
+                .banner_section.shop_banner_slider .carousel-item {
+                background-size: 575px 16rem!important;
+                }
+            }
                 
-        </style>
-        <script>
-            window.onload = function() {
-                var preloader = document.getElementById('preloader2');
-                setTimeout(function() {
-                    preloader.style.display = 'none';
-                }, 800); // Oculta el preloader después de 2 segundos
-                };
-                imagePosition = 0;
-        </script>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9REMCBQM68"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-9REMCBQM68'); </script>
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-P3KJ5HGB');</script>
-        {!! Theme::header() !!}
+            .flaticon-ghit {
+                display: inline-block;
+                width: 36px; /* Ajusta según el tamaño deseado */
+                height: 36px; /* Ajusta según el tamaño deseado */
+                background: url('../themes/shopwise/images/ghit.svg') no-repeat center center;
+            }
+            .icon-kubo {
+                display: inline-block;
+                width: 36px; /* Ajusta según el tamaño deseado */
+                height: 36px; /* Ajusta según el tamaño deseado */
+                background: url('../themes/shopwise/images/icon-kubo.png') no-repeat center center;
+            }
+        </style>        
     </head>
+    
     <body {!! Theme::bodyAttributes() !!}>
     {!! apply_filters(THEME_FRONT_BODY, null) !!}
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3KJ5HGB"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-        
+    
     <div id="alert-container"></div>
     @if (Request::is('/'))
     <div id="preloader2">
@@ -249,6 +316,7 @@
         </div>   
     </div>
     @endif
+
     @if (is_plugin_active('newsletter') && theme_option('enable_newsletter_popup', 'yes') === 'yes')
         <div data-session-domain="{{ config('session.domain') ?? request()->getHost() }}"></div>
         <div class="modal fade subscribe_popup" id="newsletter-modal" data-time="{{ (int)theme_option('newsletter_show_after_seconds', 10) * 1000 }}" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-label="Subscribe popup" aria-hidden="true">
@@ -316,7 +384,7 @@
                                     {{--}}@php $currencies = get_all_currencies(); @endphp
                                     @if (count($currencies) > 1)
 
-                                        <!-- <div class="language-wrapper choose-currency mr-3">
+                                         <div class="language-wrapper choose-currency mr-3">
                                             <div class="dropdown">
                                                 <button class="btn btn-secondary dropdown-toggle btn-select-language" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                     {{ get_application_currency()->title }}
@@ -330,7 +398,7 @@
                                                     @endforeach
                                                 </ul>
                                             </div>
-                                        </div> -->
+                                        </div>
 
                                     @endif{{--}}
                                 @endif

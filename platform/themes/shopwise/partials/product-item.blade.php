@@ -7,9 +7,9 @@
                 @foreach ($product->productLabels as $label)
                       {{--}} <span class="pr_flash" @if ($label->color) style="background-color: {{ $label->color }}" @endif>{{ $label->name }}</span>{{--}}
                    @if($label->id==1)
-                   <span class="pr_flash bg-secondary" ><img src="{{ asset('storage/icons/star.png') }}" alt="star-icon" width="30" height="30" />
+                 <!--  <span class="pr_flash bg-secondary" ><img src="{{ asset('storage/icons/star.png') }}" alt="star-icon" width="30" height="30" />
 
-                   </span>
+                   </span> -->
                     @endif
                 @endforeach
             @else
@@ -21,7 +21,7 @@
         @endif
         <div class="product_img">
             <a href="{{ $product->url }}">
-                <img  src="{{ RvMedia::getImageUrl($product->image, 'medium', false, RvMedia::getDefaultImage()) }}" alt="{{ $product->name }}" loading="lazy"  />
+                <img  src="{{ RvMedia::getImageUrl($product->image, 'medium', false, RvMedia::getDefaultImage()) }}" alt="Carros usados en venta en Colombia" loading="lazy"  />
                 @if (isset($product->images[1]))
                     <img class="product_hover_img" src="{{ RvMedia::getImageUrl($product->images[1], 'medium', false, RvMedia::getDefaultImage()) }}" alt="Carros usados en venta en Colombia" loading="lazy" />
                 @endif
@@ -42,28 +42,30 @@
             </div>
         </div>
         <div class="product_info">
-            <div class="product_title"><a href="{{ $product->url }}">{{ $product->name }}</a></div>
-
-            {!! apply_filters('ecommerce_before_product_price_in_listing', null, $product) !!}
+        <div class="product_title"><a href="{{ $product->url }}">{{ $product->name }}</a></div>
+        {!! apply_filters('ecommerce_before_product_price_in_listing', null, $product) !!}
             <div class="product_price">
                 <span class="price">{{ format_price($product->front_sale_price_with_taxes) }}</span>
                 @if ($product->front_sale_price !== $product->price)
-                    <del>{{ format_price($product->price_with_taxes) }}</del>
+                  <!--  <del>{{ format_price($product->price_with_taxes) }}</del>
                     <div class="on_sale">
                         <span>{{ __(':percentage Off', ['percentage' => get_sale_percentage($product->price, $product->front_sale_price)]) }}</span>
                     </div>
+                    -->
                 @endif
             </div>
-            {!! apply_filters('ecommerce_after_product_price_in_listing', null, $product) !!}
+            
             {{EcommerceHelper::getCiudadusuario($product->created_by_id)}}
-            @if (EcommerceHelper::isReviewEnabled())
+            {!! apply_filters('ecommerce_after_product_price_in_listing', null, $product) !!}
+
+            <!--@if (EcommerceHelper::isReviewEnabled())
                 <div class="rating_wrap">
                     <div class="rating">
                         <div class="product_rate" style="width: {{ $product->reviews_avg * 20 }}%"></div>
                     </div>
                     <span class="rating_num">({{ $product->reviews_count }})</span>
                 </div>
-            @endif
+            @endif-->
             <div class="pr_desc">
                 <p>{!! BaseHelper::clean($product->description) !!}</p>
             </div>

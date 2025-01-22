@@ -91,11 +91,13 @@
                                 </div>
                             </div>
                         @else
+                            @if(EcommerceHelper::validaConcesionario(auth()->id()) != null)
                             <button class="btn {{ $button['className'] }}" tabindex="0" aria-controls="{{ $table->getOption('id') }}" type="button" aria-haspopup="dialog" aria-expanded="false"
                                 >
                                 
                                 {!! $button['text'] !!}
                             </button>
+                            @endif
                         @endif
                     @endforeach
 
@@ -103,7 +105,7 @@
                         @if (is_string($defaultButton))
                             @switch($defaultButton)
                                 @case('reload')
-                                    <x-core::button
+                                    <!--<x-core::button
                                         type="button"
                                         data-bb-toggle="dt-buttons"
                                         data-bb-target=".buttons-reload"
@@ -112,7 +114,7 @@
                                         icon="ti ti-refresh"
                                     >
                                         {{ trans('core/base::tables.reload') }}
-                                    </x-core::button>
+                                    </x-core::button>-->
                                     @break
                                 @case('export')
                                     <div class="dropdown">

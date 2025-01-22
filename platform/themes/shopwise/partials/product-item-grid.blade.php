@@ -7,9 +7,9 @@
                 @foreach ($product->productLabels as $label)
                    {{--}} <span class="pr_flash" @if ($label->color) style="background-color: {{ $label->color }}" @endif>{{ $label->name }}</span>{{--}}
                    @if($label->id==1)
-                   <span class="pr_flash bg-secondary" ><img src="{{ asset('storage/icons/star.png') }}" alt="star-icon" width="30" height="30" />
+                  <!-- <span class="pr_flash bg-secondary" ><img src="{{ asset('storage/icons/star.png') }}" alt="star-icon" width="30" height="30" />
 
-                   </span>
+                   </span> -->
                     @endif
                 @endforeach
             @else
@@ -44,10 +44,7 @@
             <div class="product_price">
                 <span class="price">{{ format_price($product->front_sale_price_with_taxes) }}</span>
                 @if ($product->front_sale_price !== $product->price)
-                    <del>{{ format_price($product->price_with_taxes) }}</del>
-                    <div class="on_sale">
-                        <span>{{ __(':percentage Off', ['percentage' => get_sale_percentage($product->price, $product->front_sale_price)]) }}</span>
-                    </div>
+
                 @endif
             </div>
             {!! apply_filters('ecommerce_after_product_price_in_listing', null, $product) !!}

@@ -12,7 +12,7 @@
     .img_logo {
         width: 100%;
         overflow: hidden; /* Oculta cualquier desbordamiento */
-        height: 400px; /* Ajusta este valor según tus necesidades */
+        height: 400px!important; /* Ajusta este valor según tus necesidades */
     }
 </style>
 
@@ -24,9 +24,9 @@
             </div>
         </div>
         <div class="col-12 ">
-            <div class="client_logo carousel_slider owl-carousel owl-theme nav_style3"
+            <div class="carousel_slider owl-carousel owl-theme nav_style3"
                  data-dots="false" data-nav="true" data-margin="20" data-loop="true" data-autoplay="true"
-                 data-responsive='{"0":{"items": "1"}, "768":{"items": "3"}, "992":{"items": "3"}, "1200":{"items": "3"}}'>
+                 data-responsive='{"0":{"items": "2"}, "768":{"items": "2"}, "992":{"items": "3"}, "1200":{"items": "3"}}'>
                 @if (!empty($publications?->sliderItems))
                 @foreach($publications->sliderItems as $publications)
 

@@ -8,15 +8,16 @@ use Botble\Ecommerce\Forms\ProductLabelForm;
 use Botble\Ecommerce\Http\Requests\ProductLabelRequest;
 use Botble\Ecommerce\Models\ProductLabel;
 use Botble\Ecommerce\Tables\ProductLabelTable;
+use MercadoPago;
+use MercadoPago\Preference;
+use MercadoPago\Item;
 use App\Models\history_payments;
 use Botble\Ecommerce\Models\Discount;
 use Botble\Ecommerce\Models\ProductAttributeSet;
 use Exception;
-use GPBMetadata\Google\Rpc\Code;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
@@ -80,18 +81,22 @@ class ProductLabelController extends BaseController
 
     public function getPrice($id)
     {
-        // Buscar el ProductLabel por su ID
-        $label = ProductLabel::find($id);
+        try{
+            // Buscar el ProductLabel por su ID
+            $label = ProductLabel::find($id);
 
-        // Verificar si existe el ProductLabel y devolver el precio, o un error si no existe
-        if ($label) {
-            return response()->json(['price' => $label]);
-        } else {
-            return response()->json(['error' => 'Label no encontrado'], 404);
+            // Verificar si existe el ProductLabel y devolver el precio, o un error si no existe
+            if ($label) {
+                return response()->json(['price' => $label]);
+            } else {
+                return response()->json(['error' => 'Label no encontrado'], 404);
+            }
+        } catch (Exception $e){
+            return $e;
         }
     }
 
-    public function getNameLabel($id)
+    public function getNameLabel(Request $id)
     {
         // Buscar el ProductLabel por su ID
         $label = ProductLabel::find($id);
@@ -109,7 +114,7 @@ class ProductLabelController extends BaseController
 
         try {
 
-            //MercadoPagoConfig::setAccessToken(env('MERCADO_PAGO_TOKEN'));
+            //MercadoPagoConfig::setAccessToken(env('MERCADO_PAGO_KEY'));
             $this->authenticate();
             $payment = new history_payments();
             $payment->userId = Auth()->id();
@@ -118,9 +123,9 @@ class ProductLabelController extends BaseController
             $payment->state = 'En Proceso';
             $payment->save();
 
-            //$uuidWithoutHyphens = str_replace('-', '', $payment->uuid);
-            $client = new PreferenceClient();
+            $uuidWithoutHyphens = str_replace('-', '', $payment->uuid);
 
+            $client = new PreferenceClient();
             $preference = $client->create([
                 "items" => [
                     [
@@ -204,6 +209,7 @@ class ProductLabelController extends BaseController
 
         return $valor;
     }
+
     /**
      * Consulta los atributos 
      * @author miguel rodriguez

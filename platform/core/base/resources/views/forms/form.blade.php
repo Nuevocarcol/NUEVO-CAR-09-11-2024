@@ -189,19 +189,6 @@
                             @if (isset($fields['status']))
                                 {!! $fields['status']->render() !!}
                             @endif
-
-
-
-                            {{ $form->getOpenWrapperFormColumns() }}
-                            @if (isset($fields['content']))
-                                {!! $fields['content']->render() !!}
-                            @endif
-                                                    
-
-                            {{ $form->getOpenWrapperFormColumns() }}
-                            @if (isset($fields['content']))
-                                {!! $fields['content']->render() !!}
-                            @endif
                             @foreach ($form->getMetaBoxes() as $key => $metaBox)
                                 {!! $form->getMetaBox($key) !!}
                             @endforeach
@@ -233,11 +220,19 @@
                                 <p id="productName">Detalles de Tu Plan: <span id="productNameValue"></span> </p>
                                 <p id="productPrice">Precio: <span id="productPriceValue"></p>
                                 <ul id="infoplan" style="text-decoration: none;"></ul>
+                                @if(EcommerceHelper::validaConcesionario(auth()->id()) == null)
                                 <input type="checkbox" name="chdescuento" id="chdescuento">
-                                <label for="chdescuento">Codigo de descuento</label>
-                                <input id="descuento" class="form-control" disabled name="descuento">
-                                <span><i class="ti ti-ghit"></i></span>
-                                <hr>
+                                <label for="chdescuento">Codigo de descuento concesionario</label>
+                                <div class="row">
+                                    <div class="col-7">
+                                        <input id="descuento" class="form-control" disabled name="descuento">
+                                    </div>
+                                    <div class="col-3">
+                                        <a id="validaDes" class="btn btn-default btn-xs">Validar descuento</a>
+                                    </div>
+                                </div>
+                                @endif
+                                <hr></hr>                               
                                 <div id="checkout-button">
                                     <!-- Aquí puedes agregar un botón de pago si lo necesitas -->
                                 </div>
@@ -282,7 +277,6 @@
                         } else {
                             toastr['error']('Realice su pago para guardar la publicacion');
                         }
-                        
                     default:
                         valido = false  
                 }
@@ -292,6 +286,7 @@
                     updateProgressBar(step + 1);
                 }
             }
+
 
             function prevStep(step) {
                 $('.nav-tabs .nav-link').eq(step - 1).tab('show');
@@ -305,14 +300,13 @@
 
             function submitForm() {
                 // Aquí puedes agregar la lógica para enviar el formulario
-                alert('Formulario enviado');
+                //alert('Formulario enviado');
             }
 
             $('.nav-tabs .nav-link').on('shown.bs.tab', function(e) {
                 var step = $(e.target).parent().index() + 1;
                 updateProgressBar(step);
             });
-
             function validarVacio(id, name){
                 if($(`#${id}`).val() != ""){
                     return Boolean(true);
@@ -338,7 +332,6 @@
             let nombreProducto;
             let precio;
             let label_id;
-            let descuento = 0;
             document.addEventListener('DOMContentLoaded', function() {
                 $('#is_featured').prop('checked', true);
                 const productLabelsField = document.getElementById('product_label');
@@ -361,13 +354,16 @@
                         $('#descuento').removeAttr('disabled');
                     } else {
                         $('#descuento').attr('disabled', true);
-                    }                 
+                        $('#descuento').val('');
+                        getPriceProducts(plan);
+                    }
+                    
                 });
-                $('#descuento').on('change', function(){
+                $('#validaDes').on('click', function(){
                     getPriceProducts(plan);
                 });
                 setTimeout(()=>{
-                    $('.ck-placeholder').attr('data-placeholder','Escribe Aqui la descripcion de tu vehiculo, teniendo en cuenta la siguiente información:- Kilometraje, - Estado del Vehiculo -  Documentos al dia - Venta Directa - Impuestos -Tecno mecánica -Soat - Cambio de Aceite - Acepta Peritaje - Se acepta vehiculo de menor o mayor valor - Estado de las llantas - Placa terminada en : - ');
+                    $('.ck-placeholder').attr('data-placeholder','Escribe Aqui la descripcion de tu vehiculo, teniendo en cuenta la siguiente información:Kilometraje, Estado del Vehiculo, Estado de las llantas, Placa terminada par o impar');
                     const ckeditorHeader = document.querySelector('.ck-editor__top');
                     if (ckeditorHeader) {
                         // Oculta el header (barra de herramientas)
@@ -401,6 +397,9 @@
                 setInterval(()=> {
                     $('.dataTable-custom-filter').hide();
                 }, 2000);
+                
+                
+               
             });
 
             function findPriceByIdLabelSelected(idSelectedValue) {
@@ -433,14 +432,20 @@
 
             function getPriceProducts(idSelectedValue) {
                 console.log("id", idSelectedValue)
-                fetch(`/admin/ecommerce/product-labels/getlabelprice/${idSelectedValue}`)
+                fetch(`/admin/ecommerce/product-labels/getprice/${idSelectedValue}`,{
+                    headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                })
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data);
                         if (data.price) {
                             // Actualizar el label con el precio
                             //document.getElementById('price_label').textContent = 'Precio: ' + data.price;
                             this.nombreProducto = data.price['name'];
-                            if(this.descuento.value != ''){
+                            if(this.descuento != undefined && this.descuento.value != ''){
                                 let valorDescuento = 0;
                                 dataToSend = {
                                     'id' : idSelectedValue,
@@ -465,13 +470,7 @@
                                 .catch(error => console.error('Error en la petición:', error));
                             } else {
                                 this.precio = data.price['price'];
-                            createPreference();
-                            createPreference();
-                            document.getElementById('productNameValue').textContent = data.price['name'] ||
-                                'Nombre no disponible';
                                 createPreference();
-                            document.getElementById('productNameValue').textContent = data.price['name'] ||
-                                'Nombre no disponible';
                                 document.getElementById('productPriceValue').textContent = `$${data.price['price']}` ||
                                     'Precio no disponible';
                                 
@@ -502,7 +501,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                            'Accept': 'application/json'
                         },
                         body: JSON.stringify(dataToSend)
                     })
@@ -518,16 +517,31 @@
                         let miDiv = document.getElementById('checkout-button');
                         miDiv.innerHTML = '';
                         // Crea un componente de billetera de MercadoPago en el contenedor con id "wallet_container"
-                        mp.checkout({
+                        mp.bricks().create("wallet", "checkout-button", {
+                            initialization: {
+                                preferenceId: `${data['id']}`,
+                                redirectMode: 'blank'
+                            },
+                            onSubmit: (data) => {
+                                $('#submit-information').click();
+                            },
+                            customization: {
+                                texts: {
+                                    action: "pay",
+                                    valueProp: 'security_safety',
+                                },
+                            },
+                        });
+                        /*mp.checkout({
                         preference: {
                             id: data['id']
                         },
                         render: {
                             container: '#checkout-button',
                             label: 'Ir Pagar',
-                            type: 'button'
+                            type: 'link'
                         }
-                        });
+                        });*/
                         }
                     })
                     .catch(error => console.error('Error en la petición:', error));
@@ -559,7 +573,7 @@
             async function executePaymentByMercadoPago() {
                 try {
                     const mp = configurateMercadoPago();
-                    const preference = await createPreference(this.nombreProducto, this.precio);
+                    const preference = await createPaymentPreference(this.nombreProducto, this.precio);
                     mp.checkout({
                         preference: {
                             id: preference.id
@@ -574,8 +588,6 @@
                     const checkoutButton = document.querySelector(
                         '#checkout-button button'); // Captura el botón que MercadoPago renderiza
                     if (checkoutButton) {
-                        const input = document.getElementById('payButton');
-                        input.style.display = "none"
                         checkoutButton.addEventListener('click', function(event) {
                             console.log("aaa")
                             event.preventDefault(); // Evita que el botón provoque un submit o recargue la página
@@ -585,6 +597,11 @@
                     console.log("Error en el proceso de pago", errr);
                 }
             }
+
+            document.querySelector('#checkout-button').addEventListener('click', function (event) {
+                event.preventDefault(); // Previene cualquier recarga de página
+                console.log('Botón de Wallet Brick presionado');
+            });
 
             function openProductModal(id) {
                 var myModal = new bootstrap.Modal(document.getElementById('productModal'));
@@ -597,7 +614,7 @@
             .price-group > div:has(#sku){
                 display: none;
             }
-            .label:has(#is_featured){
+            label:has(#is_featured){
                 display:none;
             }
             .price-group > div:has(#sale_price){

@@ -177,11 +177,16 @@ AdminHelper::registerRoutes(function () {
 
         Route::group(['prefix' => 'product-labels', 'as' => 'product-label.'], function () {
             Route::resource('', 'ProductLabelController')->parameters(['' => 'product-label']);
-            Route::get('/getlabelprice/{id}', [ProductLabelController::class, 'getPrice'])->name('get-price');
-            Route::post('/create-preference', [ProductLabelController::class, 'createPreferenceForMercadoPago'])->name('createPreferenceForMercadoPago');
+            Route::get('/getprice/{id}', [ProductLabelController::class, 'getPrice'])->name('get-price')
+            ->withoutMiddleware(['auth', 'verified']);
+            Route::post('/create-preference', [ProductLabelController::class, 'createPreferenceForMercadoPago'])->name('createPreferenceForMercadoPago')
+            ->withoutMiddleware(['auth', 'verified']);
             Route::get('/get-label-name/{id}', [ProductLabelController::class, 'getNameLabel'])->name('get-NameLabel');
-            Route::post('/descuento', [ProductLabelController::class, 'descuento'])->name('descuento');
-            Route::post('/get-atributo', [ProductLabelController::class, 'getAtributo'])->name('getAtributo');
+            Route::post('/descuento', [ProductLabelController::class, 'descuento'])->name('descuento')
+            ->withoutMiddleware(['auth', 'verified']);
+            Route::post('/get-atributo', [ProductLabelController::class, 'getAtributo'])->name('getAtributo')
+            ->withoutMiddleware(['auth', 'verified']);
+
         });
     });
 

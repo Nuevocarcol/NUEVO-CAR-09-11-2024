@@ -38,11 +38,13 @@
                                 @endif
                             @endforeach
                         @endif
+                        <!--
                         <span class="cart_quantity"> {{ $cartItem->qty }} x <span class="cart_amount">
                                 {{ format_price($cartItem->price) }} @if ($product->front_sale_price != $product->price)
-                                <small><del>{{ format_price($product->price) }}</del></small>
+                              <!--   <small><del>{{ format_price($product->price) }}</del></small> -->
                             @endif
                         </span>
+                        -->
                     </li>
                 @endif
             @endforeach

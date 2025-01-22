@@ -106,7 +106,6 @@
                 <hr />
                 <ul class="product-meta product_description">
 
-                    <li id="product-sku" @if (!$product->sku) style="display: none" @endif>{{ __('SKU') }}: <span>{{ $product->sku }}</span></li>
                     <li>{{ __('Category') }}:
                         @foreach ($product->categories()->get() as $category)
                             <a href="{{ $category->url }}">{{ $category->name }}</a>@if (!$loop->last),@endif

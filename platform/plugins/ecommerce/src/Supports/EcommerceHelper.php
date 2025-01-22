@@ -620,6 +620,36 @@ class EcommerceHelper
 
     }
 
+    /**
+     * Consultar descuento para validar si es concesionario
+     * @author miguel rodriguez
+     * @since 22 de Enero 2025
+     */
+    public function validaConcesionario($id){
+        $usuario = User::query()->find($id);
+        if($usuario->email == "admin@nuevocar.com"){
+            return $usuario;    
+        }
+        $customer = Customer::query()
+        ->where('email', $usuario->email)
+        ->get()
+        ->first();
+        if ($customer == null) {
+            return $customer;
+        } else {
+            $descuento = Discount::query()
+            ->where('title', $customer->phone)
+            ->select('code', 'value', 'type_option')
+            ->get()
+            ->first();
+            if($descuento == null){
+               return $descuento;
+            } else {
+                return $descuento;
+            }
+        }
+    }
+
     public function buscarProductousuario($id){
 
         $usuario = User::query()->find($id);

@@ -33,14 +33,13 @@
                     {!! dynamic_sidebar('footer_sidebar') !!}
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="widget">
-                            <h3 class="widget_title">{{ __('Contact Info') }}</h3>
+                            <h3 class="widget_title">{{ __('Contactanos') }}</h3>
                             <ul class="contact_info contact_info_light">
-                                @if (theme_option('address'))
+                                
                                     <li>
-                                        <i class="ti-location-pin"></i>
-                                        <p>{{ theme_option('address') }}</p>
+                                       <a href="mailto:Soporte@nuevocar.com">Soporte@nuevocar.com</a>
                                     </li>
-                                @endif
+                                
                                 @if (theme_option('email'))
                                     <li>
                                         <i class="ti-email"></i>
@@ -120,4 +119,6 @@
     {!! Theme::footer() !!}
 
     </body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3KJ5HGB"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </html>
