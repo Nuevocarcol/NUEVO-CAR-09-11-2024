@@ -36,7 +36,7 @@ EcommerceHelper::dataForFilter($category ?? null);
                 <li>
                     <div class="custome-checkbox">
                         <input class="form-check-input submit-form-on-change" type="checkbox" name="brands[]" id="brand-{{ $brand->id }}" value="{{ $brand->id }}" @if (in_array($brand->id, request()->input('brands', []))) checked @endif>
-                        <label class="form-check-label" for="brand-{{ $brand->id }}"><span>{{ $brand->name }} <span class="d-inline-block">({{ $brand->products_count }})</span> </span></label>
+                        <label class="form-check-label" for="brand-{{ $brand->id }}"><span>{{ $brand->name }} <span class="d-inline-block"><!--({{ $brand->products_count }})--></span> </span></label>
                     </div>
                 </li>
             @endforeach

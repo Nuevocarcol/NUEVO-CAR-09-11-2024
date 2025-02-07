@@ -2,6 +2,7 @@
 
 namespace Botble\Ecommerce\Tables;
 
+use App\Models\User;
 use Botble\Base\Facades\BaseHelper;
 use Botble\Base\Facades\Html;
 use Botble\DataSynchronize\Table\HeaderActions\ExportHeaderAction;
@@ -59,8 +60,94 @@ class ProductTable extends TableAbstract
     }
 
     public function ajax(): JsonResponse
-    {
-        $data = $this->table
+    {       
+        $user = User::find(Auth()->id());
+        if($user != null && $user->email == 'admin@nuevocar.com'){
+            $data = $this->table
+            ->eloquent($this->query())
+            ->editColumn('name', function (Product $item) {
+                $productType = null;
+
+                if (! EcommerceHelper::isDisabledPhysicalProduct() && EcommerceHelper::isEnabledSupportDigitalProducts()) {
+                    $productType = Html::tag('small', ' &mdash; ' . $item->product_type->label())->toHtml();
+                }
+
+                if (! EcommerceHelper::isDisabledPhysicalProduct() && ! $this->hasPermission('products.edit')) {
+                    return BaseHelper::clean($item->name) . $productType;
+                }
+
+                return Html::link(
+                    route('products.edit', $item->getKey()),
+                    BaseHelper::clean($item->name)
+                ) . $productType;
+            })
+            ->editColumn('price', function (Product $item) {
+                return $item->price_in_table;
+            })
+            ->editColumn('quantity', function (Product $item) {
+                if (! $item->with_storehouse_management) {
+                    return '&#8734;';
+                }
+
+                if ($item->variations->isEmpty()) {
+                    return $item->quantity;
+                }
+
+                $withStoreHouseManagement = $item->with_storehouse_management;
+
+                $quantity = 0;
+
+                foreach ($item->variations as $variation) {
+                    if (! $variation->product->with_storehouse_management) {
+                        $withStoreHouseManagement = false;
+
+                        break;
+                    }
+
+                    $quantity += $variation->product->quantity;
+                }
+
+                return $withStoreHouseManagement ? $quantity : '&#8734;';
+            })
+            ->editColumn('sku', function (Product $item) {
+                return BaseHelper::clean($item->sku ?: '&mdash;');
+            })
+            ->editColumn('order', function (Product $item) {
+                return view('plugins/ecommerce::products.partials.sort-order', compact('item'))->render();
+            })
+            ->editColumn('stock_status', function (Product $item) {
+                return BaseHelper::clean($item->stock_status_html);
+            })
+            ->filter(function ($query) {
+                $keyword = request()->input('search.value');
+                if ($keyword) {
+                    $keyword = '%' . $keyword . '%';
+
+                    $query
+                        ->where('created_by_id', Auth()->user()->id)
+                        ->where('ec_products.name', 'LIKE', $keyword)
+                        ->where('is_variation', 0)
+                        ->orWhere(function ($query) use ($keyword) {
+                            $query
+                                ->where('created_by_id', Auth()->user()->id)
+                                ->where('is_variation', 0)
+                                ->where(function ($query) use ($keyword) {
+                                    $query
+                                        ->orWhere('ec_products.sku', 'LIKE', $keyword)
+                                        ->orWhere('ec_products.created_at', 'LIKE', $keyword)
+                                        ->orWhereHas('variations.product', function ($query) use ($keyword) {
+                                            $query->where('sku', 'LIKE', $keyword);
+                                        });
+                                });
+                        });
+
+                    return $query;
+                }
+
+                return $query;
+            });
+        } else {
+            $data = $this->table
             ->eloquent($this->query()->where('created_by_id', Auth()->user()->id))
             ->editColumn('name', function (Product $item) {
                 $productType = null;
@@ -143,13 +230,42 @@ class ProductTable extends TableAbstract
 
                 return $query;
             });
+        }
+        
 
         return $this->toJson($data);
     }
 
     public function query(): Relation|Builder|QueryBuilder
     {
-        $query = $this->getModel()
+        $user = User::find(Auth()->id());
+        if($user != null && $user->email == 'admin@nuevocar.com'){
+            $query = $this->getModel()
+            ->query()
+            ->select([
+                'id',
+                'name',
+                'order',
+                'created_at',
+                'status',
+                'sku',
+                'image',
+                'images',
+                'price',
+                'sale_price',
+                'sale_type',
+                'start_date',
+                'end_date',
+                'quantity',
+                'with_storehouse_management',
+                'stock_status',
+                'product_type',
+                'created_by_id'
+            ])
+            ->where('is_variation', 0)
+            ->with('variations.product');
+        } else {
+            $query = $this->getModel()
             ->query()
             ->select([
                 'id',
@@ -174,7 +290,8 @@ class ProductTable extends TableAbstract
             ->where('created_by_id', Auth()->user()->id)
             ->where('is_variation', 0)
             ->with('variations.product');
-
+        }
+        
         return $this->applyScopes($query);
     }
 

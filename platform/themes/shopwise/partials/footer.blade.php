@@ -65,6 +65,72 @@
                     <div class="col-md-6">
                         <p class="mb-md-0 text-center text-md-left">{{ theme_option('copyright') }}</p>
                     </div>
+                    <div class="col-md-1 offset-md-3">
+                        <p>Visitas:<span id="contador">Cargando...</span></p>
+                        <style>
+                            @font-face {
+                                font-family: LCD;
+                                font-weight: 100;
+                                src: local(※), url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/383755/lcd-n___-webfont.woff) format("woff");
+                            }
+                            #contador {
+                                font-size: 2em;
+                                font-family: LCD;
+                                margin-top: 15px;
+                                margin-bottom: 28px;
+                                color: #fff;
+                            }
+                        </style>
+                        <script>
+                            // Función para obtener una cookie por nombre
+                            function getCookie(nombre) {
+                                let cookies = document.cookie.split("; ");
+                                for (let i = 0; i < cookies.length; i++) {
+                                    let [clave, valor] = cookies[i].split("=");
+                                    if (clave === nombre) return decodeURIComponent(valor);
+                                }
+                                return null;
+                            }
+
+                            // Función para establecer una cookie con duración de 10 años
+                            function setCookie(nombre, valor, dias) {
+                                let fecha = new Date();
+                                fecha.setTime(fecha.getTime() + (dias * 24 * 60 * 60 * 1000)); // Expira en X días
+                                document.cookie = `${nombre}=${encodeURIComponent(valor)}; expires=${fecha.toUTCString()}; path=/`;
+                            }
+
+                            // Obtener el contador desde la cookie o inicializar en 0
+                            let visitas = getCookie("contadorVisitas");
+                            visitas = visitas ? parseInt(visitas) : 120;
+
+                            // Función para actualizar el contador
+                            function actualizarContador() {
+                                let incremento = Math.floor(Math.random() * 20) + 1; // Número aleatorio entre 1 y 20
+                                visitas += incremento;
+                                setCookie("contadorVisitas", visitas, 3650); // Guardar por 10 años
+                                document.getElementById("contador").innerText = visitas;
+                            }
+
+                            // Mostrar el contador actual al cargar la página
+                            document.getElementById("contador").innerText = visitas;
+
+                            // Verificar si han pasado 10 minutos desde la última actualización
+                            let ultimaActualizacion = getCookie("ultimaActualizacion");
+                            let ahora = Date.now();
+
+                            if (!ultimaActualizacion || (ahora - parseInt(ultimaActualizacion)) >= 600000) { // 10 minutos
+                                actualizarContador();
+                                setCookie("ultimaActualizacion", ahora, 3650); // Guardar por 10 años
+                            }
+
+                            // Refrescar cada 10 minutos sin recargar la página
+                            setInterval(() => {
+                                actualizarContador();
+                                setCookie("ultimaActualizacion", Date.now(), 3650);
+                            }, 600000);
+
+                        </script>
+                    </div>
                     <div class="col-md-6">
                         <ul class="footer_payment text-center text-lg-right">
                             @foreach(json_decode(theme_option('payment_methods', []), true) as $method)
@@ -102,7 +168,6 @@
      @endif
 
     <a href="#" class="scrollup" style="display: none;" title="back to top"><i class="ion-ios-arrow-up"></i></a>
-
 
     <script>
         window.trans = {

@@ -56,6 +56,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Js;
 use Illuminate\Validation\Rule;
 use Mockery\Undefined;
+use Illuminate\Support\Facades\Redis;
 
 class EcommerceHelper
 {
@@ -691,22 +692,43 @@ class EcommerceHelper
      */
     public function getCiudadusuario($id) {
         $usuario = User::query()->find($id);
-        
-        $customer = Customer::query()
-        ->where('email', $usuario->email)
-        ->get()
-        ->first();
-        if($customer != null){
-            $ciudad = Address::query()->where('customer_id', $customer['id'])->get()->first();
-            if($ciudad != null){
-                return $ciudad['city'];
-            } else {
+        if($usuario->email != null){
+            $customer = Customer::query()
+            ->where('email', $usuario->email)
+            ->get()
+            ->first();
+            if($customer != null){
+                $ciudad = Address::query()->where('customer_id', $customer['id'])->get()->first();
+                if($ciudad != null){
+                    return $ciudad['city'];
+                } else {
+                    return "No se encontro la ciudad";
+                }
+            } else{
                 return "No se encontro la ciudad";
             }
-        } else{
+        } else {
             return "No se encontro la ciudad";
         }
     }
+
+    public function obtenerContador()
+    {
+        $this->aumentarContador();
+        return Redis::get('contador_visitas') ?? 120;
+    }
+
+    public function aumentarContador()
+    {
+        $ultimaActualizacion = Redis::get('ultima_actualizacion');
+
+        if (!$ultimaActualizacion || time() - $ultimaActualizacion >= 600) { // 600 segundos = 10 minutos
+            $incremento = rand(1, 20);
+            Redis::incrby('contador_visitas', $incremento);
+            Redis::set('ultima_actualizacion', time());
+        }
+    }
+
 
     public function isUsingInMultipleCountries(): bool
     {

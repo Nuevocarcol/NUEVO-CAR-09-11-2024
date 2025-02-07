@@ -9,7 +9,7 @@ class LoginRequest extends Request
     public function rules(): array
     {
         return [
-            'username' => 'required|string|min:4|max:30',
+            'username' => 'required|string|min:4|max:100',
             'password' => 'required|string|min:6|max:60',
         ];
     }

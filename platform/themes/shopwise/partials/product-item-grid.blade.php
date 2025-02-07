@@ -49,14 +49,15 @@
             </div>
             {!! apply_filters('ecommerce_after_product_price_in_listing', null, $product) !!}
 
-            @if (EcommerceHelper::isReviewEnabled())
+            {{EcommerceHelper::getCiudadusuario($product->created_by_id)}}
+            <!--@if (EcommerceHelper::isReviewEnabled())
                 <div class="rating_wrap">
                     <div class="rating">
                         <div class="product_rate" style="width: {{ $product->reviews_avg * 20 }}%"></div>
                     </div>
                     <span class="rating_num">({{ $product->reviews_count }})</span>
                 </div>
-            @endif
+            @endif-->
             <div class="pr_desc">
                 <p>{!! BaseHelper::clean($product->description) !!}</p>
             </div>

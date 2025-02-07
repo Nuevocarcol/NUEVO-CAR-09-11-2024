@@ -125,6 +125,9 @@ class RegisterController extends BaseController
         $user=new User();
         $user->fill($request->input());
         $user->password=Hash::make($request->input('password'));
+        if($request->phone != null){
+            $user->username = $request->phone;
+        }
         $user->save();
         $defultRoleAsClient=4;//Rol que es usuario y su id es 3
 
